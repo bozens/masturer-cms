@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard-container">
-    <div class="dashboard-text">name: {{ name }}</div>
+    欢迎使用Masturer后台管理系统
   </div>
 </template>
 
