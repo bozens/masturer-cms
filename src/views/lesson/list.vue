@@ -7,29 +7,29 @@
     >
       <el-table-column
         type="index"
-        label="序号"
+        label="编号"
         width="100"
       />
       <el-table-column
         prop="name"
-        label="老师名字"
+        label="课程类型"
       />
       <el-table-column
         prop="name"
-        label="老师头像"
+        label="课程名称"
       />
       <el-table-column
         prop="province"
-        label="老师介绍"
+        label="年龄段"
       />
       <el-table-column
         fixed="right"
         label="操作"
-        width="200"
+        width="100"
       >
-        <template slot-scope="scope" >
-          <el-button size="small" type="primary" @click="handleClick(scope.row)">查看</el-button>
-          <el-button size="small" type="danger" @click="handleDelete(scope.$index, scope.row)" >删除</el-button>
+        <template slot-scope="scope">
+          <el-button size="small" @click="handleClick(scope.row)">查看</el-button>
+          <el-button @click="handleDelete(scope.$index, scope.row)" />
         </template>
       </el-table-column>
     </el-table>
@@ -38,7 +38,7 @@
 
 <script>
 export default {
-  name: 'TeacherList',
+  name: 'CourseList',
   data() {
     return {
       tableData: [{
@@ -78,7 +78,7 @@ export default {
       this.course = item
     },
     handleDelete(index, item) {
-      //  const id = item.id
+    //  const id = item.id
       // 处理删除
     }
   }

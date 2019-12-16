@@ -1,10 +1,10 @@
 <template>
-  <div>course/list</div>
+  <div> 1123</div>
 </template>
 
 <script>
 export default {
-  name: 'List'
+  name: 'Edit'
 }
 </script>
 

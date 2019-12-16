@@ -6,9 +6,9 @@
       style="width: 100%"
     >
       <el-table-column
-        fixed
-        prop="date"
-        label="日期"
+        type="index"
+        label="编号"
+        width="100"
       />
       <el-table-column
         prop="name"
@@ -16,19 +16,15 @@
       />
       <el-table-column
         prop="province"
-        label="省份"
+        label="年龄"
       />
       <el-table-column
         prop="city"
-        label="市区"
+        label="联系方式"
       />
       <el-table-column
         prop="address"
-        label="地址"
-      />
-      <el-table-column
-        prop="zip"
-        label="邮编"
+        label="时间"
       />
       <el-table-column
         fixed="right"

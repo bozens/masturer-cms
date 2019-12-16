@@ -64,13 +64,13 @@ export const constantRoutes = [
       {
         path: 'list',
         name: 'list',
-        component: () => import('@/views/course/list'),
+        component: () => import('@/views/lesson/list'),
         meta: { title: '课程列表', icon: 'table' }
       },
       {
         path: 'add',
         name: 'add',
-        component: () => import('@/views/course/add'),
+        component: () => import('@/views/lesson/add'),
         meta: { title: '添加课程', icon: 'tree' }
       }
     ]
@@ -126,7 +126,7 @@ export const constantRoutes = [
         path: 'index',
         name: 'Form',
         component: () => import('@/views/form/index'),
-        meta: { title: '活动配置', icon: 'form' }
+        meta: { title: '上传图片测试', icon: 'form' }
       }
     ]
   },
