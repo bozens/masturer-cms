@@ -27,6 +27,10 @@ import { mockXHR } from '../mock'
 if (process.env.NODE_ENV === 'production') {
   mockXHR()
 }
+import VueQuillEditor from 'vue-quill-editor'
+Vue.use(VueQuillEditor)
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
 
 // set ElementUI lang to EN
 // Vue.use(ElementUI, { locale })

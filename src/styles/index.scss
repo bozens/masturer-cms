@@ -24,7 +24,13 @@ html {
 #app {
   height: 100%;
 }
-
+.quill-editor{
+  width: 384px;
+  min-height: 640px;
+  .ql-editor{
+    min-height: 440px;
+  }
+}
 *,
 *:before,
 *:after {
