@@ -12,7 +12,6 @@
           action="action"
           :before-remove="beforeRemove"
           :http-request="uploadFile"
-          multiple
           :limit="1"
           :on-exceed="handleExceed"
           :file-list="fileList"
@@ -60,11 +59,13 @@ export default {
     const _this = this
     return {
       activity: {
+        org: '',
         name: '',
         icon: '',
         content: '',
-        imgUrl: [],
-        video: ''
+        videos: '',
+        images: '',
+        richText: ''
       },
       content: '',
       fileList: [],
@@ -130,8 +131,8 @@ export default {
       const formData = new FormData()
       formData.append('file', param.file)
       console.log(formData)
-      upload.uploadImage(formData).then(function(res) {
-
+      upload.uploadImage(formData).then(res => {
+        this.activity.icon = res.data
       })
     },
     uploadFile2: function(param) {

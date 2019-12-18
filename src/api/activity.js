@@ -1,17 +1,17 @@
 import request from '@/utils/request'
 
-export function login(data) {
+export function getActivityList() {
   return request({
-    url: '/auth/login',
-    method: 'post',
-    data
+    url: '/activity/list?org=xxx',
+    method: 'get'
   })
 }
 
-export function getInfo() {
+export function getInfo(token) {
   return request({
-    url: '/common/getOrgnization',
-    method: 'get'
+    url: '/user/info',
+    method: 'get',
+    params: { token }
   })
 }
 

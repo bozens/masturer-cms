@@ -1,8 +1,8 @@
 <template>
   <div class="app-container">
-    <el-form ref="form" :model="form" label-width="80px">
+    <el-form ref="form" :model="activity" label-width="80px">
       <el-form-item label="活动名称">
-        <el-input v-model="form.name" />
+        <el-input v-model="activity.name" />
       </el-form-item>
       <el-form-item label="缩略图">
         <el-upload
@@ -12,8 +12,6 @@
           action="action"
           :before-remove="beforeRemove"
           :http-request="uploadFile"
-          multiple
-          :limit="1"
           :on-exceed="handleExceed"
           :file-list="fileList"
           list-type="picture"
@@ -24,7 +22,7 @@
       </el-form-item>
       <el-form-item label="活动内容">
         <quill-editor
-          ref="text"
+          ref="QuillEditor"
           v-model="content"
           class="ql-editor"
           :options="editorOption"
@@ -34,6 +32,17 @@
         <el-button type="primary" @click="onSubmit">立即创建</el-button>
         <el-button>取消</el-button>
       </el-form-item>
+      <el-upload
+        class="upload-demo"
+        :on-preview="handlePreview"
+        :on-remove="handleRemove"
+        action="#"
+        :before-remove="beforeRemove"
+        :file-list="imgList"
+        :http-request="uploadFile2"
+      >
+        <el-button id="uploadImg" size="small" type="primary">点击上传</el-button>
+      </el-upload>
     </el-form>
   </div>
 </template>
@@ -46,33 +55,28 @@ const toolbarOptions = quill.toolbarOptions
 export default {
   name: 'Add',
   data() {
+    const _this = this
     return {
-      form: {
+      activity: {
+        org: '',
         name: '',
-        region: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
+        icon: '',
+        content: '',
+        videos: '',
+        images: '',
+        richText: ''
       },
       content: '',
-      fileList: [{
-        name: 'food.jpeg',
-        url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
-      }],
+      fileList: [],
+      imgList: [],
       editorOption: {
         modules: {
           toolbar: {
             container: toolbarOptions, // 工具栏
             handlers: {
-              'image': function(value) {
-                if (value) {
-                  alert('自定义图片')
-                } else {
-                  this.quill.format('image', false)
-                }
+              'image': function(item) {
+                _this.selectImg()
+                // document.getElementById('richImg').click()
               }
             }
           }
@@ -83,6 +87,27 @@ export default {
   methods: {
     onSubmit() {
       console.log('submit!')
+    },
+    handleSuccess(res) {
+      // 获取富文本组件实例
+      console.log('进行操作')
+      const quill = this.$refs.QuillEditor.quill
+      // 如果上传成功
+      if (res) {
+        // 获取光标所在位置
+        const length = quill.getSelection().index
+        // 插入图片，res为服务器返回的图片链接地址
+        quill.insertEmbed(length, 'image', res)
+        // 调整光标到最后
+        quill.setSelection(length + 1)
+        const { activity } = this
+        activity.imgUrl.push(res)
+        this.activity = activity
+      } else {
+        // 提示信息，需引入Message
+        this.$message.error('图片插入失败')
+      }
+      console.log('success', res)
     },
     handleRemove(file, fileList) {
       console.log(file, fileList)
@@ -96,6 +121,9 @@ export default {
     beforeRemove(file, fileList) {
       return this.$confirm(`确定移除 ${file.name}？`)
     },
+    selectImg() {
+      document.getElementById('uploadImg').click()
+    },
     uploadFile: function(param) { // 上传的函数
       console.log('上传图片')
       console.log(param)
@@ -103,7 +131,15 @@ export default {
       formData.append('file', param.file)
       console.log(formData)
       upload.uploadImage(formData).then(function(res) {
-        console.log('res', res)
+
+      })
+    },
+    uploadFile2: function(param) {
+      const formData = new FormData()
+      formData.append('file', param.file)
+      upload.uploadImage(formData).then(res => {
+        console.log('上传成功', res)
+        this.handleSuccess(res.data)
       })
     }
   }

@@ -1,5 +1,5 @@
 import Cookies from 'js-cookie'
-
+import { Base64 } from 'js-base64'
 const TokenKey = 'vue_admin_template_token'
 
 export function getToken() {
@@ -7,7 +7,9 @@ export function getToken() {
 }
 
 export function setToken(token) {
-  return Cookies.set(TokenKey, token)
+  const tokenBase = `Basic ${Base64.encode(`${token}:randomPassword`)}`
+  console.log('tokenBase', tokenBase)
+  return Cookies.set(TokenKey, tokenBase)
 }
 
 export function removeToken() {
