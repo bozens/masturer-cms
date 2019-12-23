@@ -22,7 +22,7 @@ const mutations = {
   },
   SET_ORG: (state, org) => {
     console.log(state)
-    state.token = org
+    state.org = org
   }
 }
 

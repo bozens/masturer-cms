@@ -5,19 +5,29 @@
         <el-input v-model="activity.name" />
       </el-form-item>
       <el-form-item label="缩略图">
+        <!--        <el-upload-->
+        <!--          class="upload-demo"-->
+        <!--          :on-preview="handlePreview"-->
+        <!--          :on-remove="handleRemove"-->
+        <!--          action="action"-->
+        <!--          :before-remove="beforeRemove"-->
+        <!--          :http-request="uploadFile"-->
+        <!--          :limit="1"-->
+        <!--          :on-exceed="handleExceed"-->
+        <!--          :file-list="fileList"-->
+        <!--          list-type="picture"-->
+        <!--        >-->
+        <!--          <el-button size="small" type="primary">点击上传</el-button>-->
+        <!--          <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>-->
+        <!--        </el-upload>-->
         <el-upload
-          class="upload-demo"
-          :on-preview="handlePreview"
-          :on-remove="handleRemove"
-          action="action"
-          :before-remove="beforeRemove"
+          class="avatar-uploader"
+          action="#"
+          :show-file-list="false"
           :http-request="uploadFile"
-          :on-exceed="handleExceed"
-          :file-list="fileList"
-          list-type="picture"
         >
-          <el-button size="small" type="primary">点击上传</el-button>
-          <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+          <img v-if="activity.icon" :src="activity.icon" class="avatar" style="width: 200px;height: 200px">
+          <i v-else class="el-icon-plus avatar-uploader-icon" />
         </el-upload>
       </el-form-item>
       <el-form-item label="活动内容">
@@ -29,17 +39,14 @@
         />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="onSubmit">立即创建</el-button>
-        <el-button>取消</el-button>
+        <el-button type="primary" @click="handleSubmit">修改</el-button>
       </el-form-item>
       <el-upload
         class="upload-demo"
-        :on-preview="handlePreview"
-        :on-remove="handleRemove"
         action="#"
-        :before-remove="beforeRemove"
         :file-list="imgList"
         :http-request="uploadFile2"
+        style="display: none"
       >
         <el-button id="uploadImg" size="small" type="primary">点击上传</el-button>
       </el-upload>
@@ -49,6 +56,7 @@
 
 <script>
 import * as upload from '@/api/upload'
+import * as api from '@/api/activity'
 import quill from '@/assets/config/quill'
 const toolbarOptions = quill.toolbarOptions
 
@@ -63,9 +71,10 @@ export default {
         icon: '',
         content: '',
         videos: '',
-        images: '',
+        images: [],
         richText: ''
       },
+      id: 1,
       content: '',
       fileList: [],
       imgList: [],
@@ -84,13 +93,29 @@ export default {
       }
     }
   },
+  mounted() {
+    const id = this.$route.query.id
+    this.id = id
+    this.getActivity()
+  },
+  activated() {
+    const id = this.$route.query.id
+    this.id = id
+    this.getActivity()
+  },
   methods: {
-    onSubmit() {
-      console.log('submit!')
+    getActivity() {
+      api.getActivity(this.id).then(res => {
+        console.log(res)
+        this.activity = res.data
+        this.content = res.data.richText
+        const fileList = this.fileList
+        fileList.push(res.data.icon)
+        this.fileList = fileList
+      })
     },
     handleSuccess(res) {
       // 获取富文本组件实例
-      console.log('进行操作')
       const quill = this.$refs.QuillEditor.quill
       // 如果上传成功
       if (res) {
@@ -101,7 +126,7 @@ export default {
         // 调整光标到最后
         quill.setSelection(length + 1)
         const { activity } = this
-        activity.imgUrl.push(res)
+        activity.images.push(res)
         this.activity = activity
       } else {
         // 提示信息，需引入Message
@@ -109,29 +134,24 @@ export default {
       }
       console.log('success', res)
     },
-    handleRemove(file, fileList) {
-      console.log(file, fileList)
-    },
-    handlePreview(file) {
-      console.log(file)
-    },
-    handleExceed(files, fileList) {
-      this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
-    },
-    beforeRemove(file, fileList) {
-      return this.$confirm(`确定移除 ${file.name}？`)
+    handleSubmit() {
+      this.activity.richText = this.content
+      console.log(this.activity)
+      api.editActivity(this.activity).then(res => {
+        this.$message.success('修改成功')
+      })
     },
     selectImg() {
       document.getElementById('uploadImg').click()
     },
     uploadFile: function(param) { // 上传的函数
       console.log('上传图片')
-      console.log(param)
+      console.log(this.fileList)
       const formData = new FormData()
       formData.append('file', param.file)
       console.log(formData)
-      upload.uploadImage(formData).then(function(res) {
-
+      upload.uploadImage(formData).then(res => {
+        this.activity.icon = res.data
       })
     },
     uploadFile2: function(param) {

@@ -8,7 +8,6 @@ export function getToken() {
 
 export function setToken(token) {
   const tokenBase = `Basic ${Base64.encode(`${token}:randomPassword`)}`
-  console.log('tokenBase', tokenBase)
   return Cookies.set(TokenKey, tokenBase)
 }
 

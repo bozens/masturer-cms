@@ -6,19 +6,13 @@
       </el-form-item>
       <el-form-item label="缩略图">
         <el-upload
-          class="upload-demo"
-          :on-preview="handlePreview"
-          :on-remove="handleRemove"
-          action="action"
-          :before-remove="beforeRemove"
+          class="avatar-uploader"
+          action="#"
+          :show-file-list="false"
           :http-request="uploadFile"
-          :limit="1"
-          :on-exceed="handleExceed"
-          :file-list="fileList"
-          list-type="picture"
         >
-          <el-button size="small" type="primary">点击上传</el-button>
-          <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+          <img v-if="activity.icon" :src="activity.icon" class="avatar">
+          <i v-else class="el-icon-plus avatar-uploader-icon" />
         </el-upload>
       </el-form-item>
       <el-form-item label="活动内容">
@@ -30,19 +24,17 @@
         />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="onSubmit">立即创建</el-button>
+        <el-button type="primary" @click="handleSubmit">立即创建</el-button>
         <el-button>取消</el-button>
       </el-form-item>
       <el-upload
         class="upload-demo"
-        :on-preview="handlePreview"
-        :on-remove="handleRemove"
         action="#"
-        :before-remove="beforeRemove"
         :file-list="imgList"
         :http-request="uploadFile2"
+        style="display: none"
       >
-        <el-button id="uploadImg" size="small" type="primary">点击上传</el-button>
+        <el-button id="uploadImg" size="small" type="primary" style="display:none">点击上传</el-button>
       </el-upload>
     </el-form>
   </div>
@@ -50,6 +42,7 @@
 
 <script>
 import * as upload from '@/api/upload'
+import { addActivity } from '@/api/activity'
 import quill from '@/assets/config/quill'
 const toolbarOptions = quill.toolbarOptions
 
@@ -64,11 +57,10 @@ export default {
         icon: '',
         content: '',
         videos: '',
-        images: '',
+        images: [],
         richText: ''
       },
       content: '',
-      fileList: [],
       imgList: [],
       editorOption: {
         modules: {
@@ -86,41 +78,26 @@ export default {
     }
   },
   methods: {
-    onSubmit() {
-      console.log('submit!')
-    },
     handleSuccess(res) {
-      // 获取富文本组件实例
-      console.log('进行操作')
       const quill = this.$refs.QuillEditor.quill
-      // 如果上传成功
       if (res) {
-        // 获取光标所在位置
         const length = quill.getSelection().index
-        // 插入图片，res为服务器返回的图片链接地址
         quill.insertEmbed(length, 'image', res)
-        // 调整光标到最后
         quill.setSelection(length + 1)
         const { activity } = this
-        activity.imgUrl.push(res)
+        activity.images.push(res)
         this.activity = activity
       } else {
         // 提示信息，需引入Message
         this.$message.error('图片插入失败')
       }
-      console.log('success', res)
     },
-    handleRemove(file, fileList) {
-      console.log(file, fileList)
-    },
-    handlePreview(file) {
-      console.log(file)
-    },
-    handleExceed(files, fileList) {
-      this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
-    },
-    beforeRemove(file, fileList) {
-      return this.$confirm(`确定移除 ${file.name}？`)
+    handleSubmit() {
+      this.activity.richText = this.content
+      console.log(this.activity)
+      addActivity(this.activity).then(res => {
+        this.$message.success('添加成功')
+      })
     },
     selectImg() {
       document.getElementById('uploadImg').click()

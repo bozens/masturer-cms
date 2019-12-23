@@ -1,23 +1,44 @@
 import request from '@/utils/request'
+import store from '../store'
 
 export function getActivityList() {
+  console.log(store)
+  const org = store.state.user.org
+  console.log('org', org)
   return request({
-    url: '/activity/list?org=xxx',
-    method: 'get'
-  })
-}
-
-export function getInfo(token) {
-  return request({
-    url: '/user/info',
+    url: '/activity/list',
     method: 'get',
-    params: { token }
+    params: { org: org }
   })
 }
 
-export function logout() {
+export function addActivity(data) {
   return request({
-    url: '/user/logout',
-    method: 'post'
+    url: '/activity',
+    method: 'post',
+    data
+  })
+}
+export function editActivity(data) {
+  return request({
+    url: '/activity',
+    method: 'PUT',
+    params: { id: data._id },
+    data
+  })
+}
+
+export function getActivity(id) {
+  return request({
+    url: '/activity',
+    method: 'get',
+    params: { id }
+  })
+}
+export function delActivity(id) {
+  return request({
+    url: '/activity',
+    method: 'DELETE',
+    params: { id }
   })
 }

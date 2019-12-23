@@ -93,6 +93,12 @@ export const constantRoutes = [
         name: 'add',
         component: () => import('@/views/activity/add'),
         meta: { title: '添加活动', icon: 'tree' }
+      },
+      {
+        path: 'edit',
+        name: 'edit',
+        component: () => import('@/views/activity/edit'),
+        meta: { title: '编辑活动', icon: 'tree' }
       }
     ]
   },
