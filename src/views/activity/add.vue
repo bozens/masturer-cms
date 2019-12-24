@@ -11,7 +11,7 @@
           :show-file-list="false"
           :http-request="uploadFile"
         >
-          <img v-if="activity.icon" :src="activity.icon" class="avatar">
+          <img v-if="activity.icon" :src="activity.icon" class="avatar" style="width: 200px;height: 200px">
           <i v-else class="el-icon-plus avatar-uploader-icon" />
         </el-upload>
       </el-form-item>

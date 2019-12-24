@@ -4,38 +4,38 @@ import store from '../store'
 export function getList() {
   const org = store.state.user.org
   return request({
-    url: '/lesson/list',
+    url: '/teacher/list',
     method: 'get',
     params: { org: org }
   })
 }
-export function addLesson(data) {
+export function addTeacher(data) {
   const org = store.state.user.org
   data.org = org
   return request({
-    url: '/lesson',
+    url: '/teacher',
     method: 'post',
     data
   })
 }
 
-export function delLesson(id) {
+export function delTeacher(id) {
   return request({
-    url: '/lesson',
+    url: '/teacher',
     method: 'DELETE',
     params: { id }
   })
 }
-export function getLesson(id) {
+export function getTeacher(id) {
   return request({
-    url: '/lesson',
+    url: '/teacher',
     method: 'get',
     params: { id }
   })
 }
-export function editLesson(data) {
+export function editTeacher(data) {
   return request({
-    url: '/lesson',
+    url: '/teacher',
     method: 'PUT',
     params: { id: data._id },
     data

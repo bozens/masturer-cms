@@ -97,8 +97,59 @@ export const constantRoutes = [
       {
         path: 'edit',
         name: 'edit',
-        component: () => import('@/views/activity/edit'),
-        meta: { title: '编辑活动', icon: 'tree' }
+        component: () => import('@/views/activity/edit')
+      }
+    ]
+  },
+  {
+    path: '/article',
+    component: Layout,
+    redirect: '/article/list',
+    name: 'activity',
+    meta: { title: '育儿知识', icon: 'form' },
+    children: [
+      {
+        path: 'list',
+        name: 'articleList',
+        component: () => import('@/views/article/list'),
+        meta: { title: '文章列表', icon: 'table' }
+      },
+      {
+        path: 'add',
+        name: 'articleAdd',
+        component: () => import('@/views/article/add'),
+        meta: { title: '添加文章', icon: 'tree' }
+      },
+      {
+        path: 'edit',
+        name: 'articleEdit',
+        component: () => import('@/views/article/edit')
+      }
+    ]
+  },
+  {
+    path: '/lesson',
+    component: Layout,
+    redirect: '/lesson/list',
+    name: 'activity',
+    meta: { title: '课程设置', icon: 'form' },
+    children: [
+      {
+        path: 'list',
+        name: 'lessonList',
+        component: () => import('@/views/lesson/list'),
+        meta: { title: '课程列表', icon: 'table' }
+      },
+      {
+        path: 'add',
+        name: 'lessonAdd',
+        component: () => import('@/views/lesson/add'),
+        meta: { title: '添加课程', icon: 'tree' }
+      },
+      {
+        path: 'edit',
+        name: 'lessonEdit',
+        component: () => import('@/views/lesson/edit')
       }
     ]
   },
@@ -111,15 +162,41 @@ export const constantRoutes = [
     children: [
       {
         path: 'list',
-        name: 'List',
+        name: 'teacherList',
         component: () => import('@/views/teachers/list'),
         meta: { title: '老师列表', icon: 'table' }
       },
       {
         path: 'add',
-        name: 'Add',
+        name: 'teacherAdd',
         component: () => import('@/views/teachers/add'),
         meta: { title: '新增老师', icon: 'tree' }
+      },
+      {
+        path: 'edit',
+        name: 'teacherEdit',
+        component: () => import('@/views/teachers/edit')
+      }
+    ]
+  },
+  {
+    path: '/vip',
+    component: Layout,
+    redirect: '/vip/list',
+    name: 'table',
+    meta: { title: '会员墙', icon: 'example' },
+    children: [
+      {
+        path: 'list',
+        name: 'teacherList',
+        component: () => import('@/views/vip/list'),
+        meta: { title: '会员列表', icon: 'table' }
+      },
+      {
+        path: 'add',
+        name: 'teacherAdd',
+        component: () => import('@/views/vip/add'),
+        meta: { title: '新增会员', icon: 'tree' }
       }
     ]
   },

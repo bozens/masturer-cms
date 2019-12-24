@@ -52,7 +52,9 @@ export default {
   },
   methods: {
     getActivityList() {
+      const loading = this.$loading()
       getActivityList().then(res => {
+        loading.close()
         this.tableData = res.data
       })
     },

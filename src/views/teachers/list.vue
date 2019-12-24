@@ -7,29 +7,28 @@
     >
       <el-table-column
         type="index"
-        label="序号"
+        label="编号"
         width="100"
       />
       <el-table-column
         prop="name"
-        label="老师名字"
+        label="名字"
       />
       <el-table-column
-        prop="name"
-        label="老师头像"
-      />
-      <el-table-column
-        prop="province"
-        label="老师介绍"
-      />
+        label="头像"
+        prop="icon"
+      >
+        <template slot-scope="scope">
+          <img :src="scope.row.icon" width="70">
+        </template>
+      </el-table-column>
       <el-table-column
         fixed="right"
         label="操作"
-        width="200"
       >
-        <template slot-scope="scope" >
+        <template slot-scope="scope">
           <el-button size="small" type="primary" @click="handleClick(scope.row)">查看</el-button>
-          <el-button size="small" type="danger" @click="handleDelete(scope.$index, scope.row)" >删除</el-button>
+          <el-button size="small" type="danger" @click="handleDelete(scope.row._id)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -37,49 +36,50 @@
 </template>
 
 <script>
+import { getActivityList, delActivity } from '@/api/activity'
 export default {
-  name: 'TeacherList',
+  name: 'Index',
   data() {
     return {
-      tableData: [{
-        date: '2016-05-02',
-        name: '王小虎',
-        province: '上海',
-        city: '普陀区',
-        address: '上海市普陀区金沙江路 1518 弄',
-        zip: 200333
-      }, {
-        date: '2016-05-04',
-        name: '王小虎',
-        province: '上海',
-        city: '普陀区',
-        address: '上海市普陀区金沙江路 1517 弄',
-        zip: 200333
-      }, {
-        date: '2016-05-01',
-        name: '王小虎',
-        province: '上海',
-        city: '普陀区',
-        address: '上海市普陀区金沙江路 1519 弄',
-        zip: 200333
-      }, {
-        date: '2016-05-03',
-        name: '王小虎',
-        province: '上海',
-        city: '普陀区',
-        address: '上海市普陀区金沙江路 1516 弄',
-        zip: 200333
-      }],
-      course: {}
+      tableData: []
     }
   },
+  mounted() {
+    this.getActivityList()
+  },
+  activated() {
+    this.getActivityList()
+  },
   methods: {
-    handleClick(item) {
-      this.course = item
+    getActivityList() {
+      const loading = this.$loading()
+      getActivityList().then(res => {
+        loading.close()
+        this.tableData = res.data
+      })
     },
-    handleDelete(index, item) {
-      //  const id = item.id
-      // 处理删除
+    handleClick(item) {
+      const id = item._id
+      this.$router.push({ path: '/activity/edit', query: { id }})
+    },
+    handleDelete(id) {
+      this.$confirm('是否删除该活动？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        delActivity(id).then(res => {
+          if (res.code === 2000) {
+            this.$message.success('删除成功')
+          }
+          this.getActivityList()
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
     }
   }
 }

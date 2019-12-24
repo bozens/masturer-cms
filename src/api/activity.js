@@ -13,6 +13,8 @@ export function getActivityList() {
 }
 
 export function addActivity(data) {
+  const org = store.state.user.org
+  data.org = org
   return request({
     url: '/activity',
     method: 'post',

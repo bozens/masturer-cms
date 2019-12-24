@@ -8,3 +8,12 @@ export function uploadImage(data) {
     data
   })
 }
+export function uploadVideo(data) {
+  data.append('path', 'video')
+  return request({
+    url: 'upload/single',
+    method: 'post',
+    data
+  })
+}
+

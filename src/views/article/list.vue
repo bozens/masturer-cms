@@ -11,11 +11,11 @@
         width="100"
       />
       <el-table-column
-        prop="name"
-        label="活动名称"
+        prop="title"
+        label="文章题目"
       />
       <el-table-column
-        label="活动缩略图"
+        label="文章缩略图"
         prop="icon"
       >
         <template slot-scope="scope">
@@ -36,7 +36,8 @@
 </template>
 
 <script>
-import { getActivityList, delActivity } from '@/api/activity'
+import { getList, delArticle } from '../../api/article'
+
 export default {
   name: 'Index',
   data() {
@@ -45,32 +46,34 @@ export default {
     }
   },
   mounted() {
-    this.getActivityList()
+    this.getList()
   },
   activated() {
-    this.getActivityList()
+    this.getList()
   },
   methods: {
-    getActivityList() {
-      getActivityList().then(res => {
+    getList() {
+      const loading = this.$loading()
+      getList().then(res => {
         this.tableData = res.data
+        loading.close()
       })
     },
     handleClick(item) {
       const id = item._id
-      this.$router.push({ path: '/activity/edit', query: { id }})
+      this.$router.push({ path: '/article/edit', query: { id }})
     },
     handleDelete(id) {
-      this.$confirm('是否删除该活动？', '提示', {
+      this.$confirm('是否删除该文章？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        delActivity(id).then(res => {
+        delArticle(id).then(res => {
           if (res.code === 2000) {
             this.$message.success('删除成功')
           }
-          this.getActivityList()
+          this.getList()
         })
       }).catch(() => {
         this.$message({

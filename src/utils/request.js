@@ -14,7 +14,6 @@ service.interceptors.request.use(
   config => {
     // do something before request is sent
     if (getToken()) {
-      console.log('进来', getToken())
       // config.headers['Accept'] = 'application/json'
       // config.headers['Content-Type'] = 'application/json; charset=utf-8'
       config.headers['Authorization'] = getToken()

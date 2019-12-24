@@ -1,22 +1,19 @@
 <template>
   <div class="app-container">
-    <el-form ref="form" :model="article" label-width="80px">
-      <el-form-item label="文章标题">
-        <el-input v-model="article.title" />
+    <el-form ref="form" :model="vip" label-width="80px">
+      <el-form-item label="名字">
+        <el-input v-model="vip.name" />
       </el-form-item>
-      <el-form-item label="缩略图">
+      <el-form-item label="图片">
         <el-upload
           class="avatar-uploader"
           action="#"
           :show-file-list="false"
           :http-request="uploadFile"
         >
-          <img v-if="article.icon" :src="article.icon" class="avatar" style="width: 200px">
+          <img v-if="vip.image" :src="vip.image" class="avatar" style="width: 200px">
           <i v-else class="el-icon-plus avatar-uploader-icon" />
         </el-upload>
-      </el-form-item>
-      <el-form-item label="文章内容">
-        <el-input v-model="article.content" type="textarea" :rows="8" />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSubmit">立即创建</el-button>
@@ -27,30 +24,31 @@
 </template>
 
 <script>
-import { addArticle } from '@/api/article'
+import { addVip } from '@/api/vip'
 import * as upload from '@/api/upload'
 export default {
   name: 'ArticleAdd',
   data() {
     return {
-      article: {
-        title: '',
-        icon: '',
+      vip: {
+        name: '',
+        image: '',
         content: '',
-        org: ''
-      },
-      content: ''
+        org: '',
+        male: ''
+      }
     }
   },
   methods: {
     onSubmit() {
-      addArticle(this.article).then(res => {
+      addVip(this.vip).then(res => {
         this.$message.success('创建成功')
-        this.article = {
-          title: '',
-          icon: '',
+        this.vip = {
+          name: '',
+          image: '',
           content: '',
-          org: ''
+          org: '',
+          male: ''
         }
       })
     },
@@ -61,7 +59,7 @@ export default {
       formData.append('file', param.file)
       console.log(formData)
       upload.uploadImage(formData).then(res => {
-        this.article.icon = res.data
+        this.vip.image = res.data
       })
     }
   }
