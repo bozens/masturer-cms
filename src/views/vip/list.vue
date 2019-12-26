@@ -9,7 +9,7 @@
           {{ item.name }}
         </div>
         <div class="btn">
-          <el-button type="danger" size="small" @click="deleteVip(index)"> 删除</el-button>
+          <el-button type="danger" size="small" @click="deleteVip(item._id)"> 删除</el-button>
         </div>
 
       </div>
@@ -17,16 +17,12 @@
   </div>
 </template>
 <script>
-import { getList } from '../../api/vip'
+import { getList, delVip } from '@/api/vip'
 export default {
   name: 'List',
   data() {
     return {
-      list: [
-        { name: '老婆', image: 'http://192.168.2.80:5001/image/c0b6d178ddf3ce787c2e82ec6ee08138.jpg' },
-        { name: '老婆', image: 'http://192.168.2.80:5001/image/c0b6d178ddf3ce787c2e82ec6ee08138.jpg' },
-        { name: '老婆', image: 'http://192.168.2.80:5001/image/c0b6d178ddf3ce787c2e82ec6ee08138.jpg' }
-      ]
+      list: []
     }
   },
   mounted() {
@@ -38,11 +34,27 @@ export default {
   methods: {
     getList() {
       getList().then(res => {
-        console.log(res)
+        this.list = res.data
       })
     },
-    deleteVip(index) {
-
+    deleteVip(id) {
+      this.$confirm('是否删除该照片？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        delVip(id).then(res => {
+          if (res.code === 2000) {
+            this.$message.success('删除成功')
+          }
+          this.getList()
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
     }
   }
 

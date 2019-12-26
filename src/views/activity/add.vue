@@ -45,7 +45,6 @@ import * as upload from '@/api/upload'
 import { addActivity } from '@/api/activity'
 import quill from '@/assets/config/quill'
 const toolbarOptions = quill.toolbarOptions
-
 export default {
   name: 'Add',
   data() {

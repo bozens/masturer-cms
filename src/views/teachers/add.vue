@@ -1,72 +1,127 @@
 <template>
   <div class="app-container">
-    <el-form ref="form" :model="form" label-width="80px">
-      <el-form-item label="活动名称">
-        <el-input v-model="form.name" />
+    <el-form ref="form" :model="teacher" label-width="80px">
+      <el-form-item label="姓名">
+        <el-input v-model="teacher.name" />
       </el-form-item>
-      <el-form-item label="活动区域">
-        <el-select v-model="form.region" placeholder="请选择活动区域">
-          <el-option label="区域一" value="shanghai" />
-          <el-option label="区域二" value="beijing" />
-        </el-select>
+      <el-form-item label="头像">
+        <el-upload
+          class="avatar-uploader"
+          action="#"
+          :show-file-list="false"
+          :http-request="uploadFile"
+        >
+          <img v-if="teacher.icon" :src="teacher.icon" class="avatar" style="width: 200px;height: 200px">
+          <i v-else class="el-icon-plus avatar-uploader-icon" />
+        </el-upload>
       </el-form-item>
-      <el-form-item label="活动时间">
-        <el-col :span="11">
-          <el-date-picker v-model="form.date1" type="date" placeholder="选择日期" style="width: 100%;" />
-        </el-col>
-        <el-col class="line" :span="2">-</el-col>
-        <el-col :span="11">
-          <el-time-picker v-model="form.date2" placeholder="选择时间" style="width: 100%;" />
-        </el-col>
-      </el-form-item>
-      <el-form-item label="即时配送">
-        <el-switch v-model="form.delivery" />
-      </el-form-item>
-      <el-form-item label="活动性质">
-        <el-checkbox-group v-model="form.type">
-          <el-checkbox label="美食/餐厅线上活动" name="type" />
-          <el-checkbox label="地推活动" name="type" />
-          <el-checkbox label="线下主题活动" name="type" />
-          <el-checkbox label="单纯品牌曝光" name="type" />
-        </el-checkbox-group>
-      </el-form-item>
-      <el-form-item label="特殊资源">
-        <el-radio-group v-model="form.resource">
-          <el-radio label="线上品牌商赞助" />
-          <el-radio label="线下场地免费" />
-        </el-radio-group>
-      </el-form-item>
-      <el-form-item label="活动形式">
-        <el-input v-model="form.desc" type="textarea" />
+      <el-form-item label="介绍">
+        <quill-editor
+          ref="QuillEditor"
+          v-model="content"
+          class="ql-editor"
+          :options="editorOption"
+        />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="onSubmit">立即创建</el-button>
+        <el-button type="primary" @click="handleSubmit">立即创建</el-button>
         <el-button>取消</el-button>
       </el-form-item>
+      <el-upload
+        class="upload-demo"
+        action="#"
+        :file-list="imgList"
+        :http-request="uploadFile2"
+        style="display: none"
+      >
+        <el-button id="uploadImg" size="small" type="primary" style="display:none">点击上传</el-button>
+      </el-upload>
     </el-form>
   </div>
 </template>
 
 <script>
+import * as upload from '@/api/upload'
+import { addTeacher } from '@/api/teacher'
+import quill from '@/assets/config/quill'
+const toolbarOptions = quill.toolbarOptions
+
 export default {
   name: 'Add',
   data() {
+    const _this = this
     return {
-      form: {
+      teacher: {
+        org: '',
         name: '',
-        region: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
+        icon: '',
+        content: '',
+        // 暂不需要
+        videos: '',
+        pictures: [],
+        // 富文本
+        images: [],
+        richText: ''
+      },
+      content: '',
+      imgList: [],
+      editorOption: {
+        modules: {
+          toolbar: {
+            container: toolbarOptions, // 工具栏
+            handlers: {
+              'image': function(item) {
+                _this.selectImg()
+                // document.getElementById('richImg').click()
+              }
+            }
+          }
+        }
       }
     }
   },
   methods: {
-    onSubmit() {
-      console.log('submit!')
+    handleSuccess(res) {
+      const quill = this.$refs.QuillEditor.quill
+      if (res) {
+        const length = quill.getSelection().index
+        quill.insertEmbed(length, 'image', res)
+        quill.setSelection(length + 1)
+        const { teacher } = this
+        teacher.images.push(res)
+        this.teacher = teacher
+      } else {
+        // 提示信息，需引入Message
+        this.$message.error('图片插入失败')
+      }
+    },
+    handleSubmit() {
+      this.teacher.richText = this.content
+      console.log(this.teacher)
+      addTeacher(this.teacher).then(res => {
+        this.$message.success('添加成功')
+      })
+    },
+    selectImg() {
+      document.getElementById('uploadImg').click()
+    },
+    uploadFile: function(param) { // 上传的函数
+      console.log('上传图片')
+      console.log(param)
+      const formData = new FormData()
+      formData.append('file', param.file)
+      console.log(formData)
+      upload.uploadImage(formData).then(res => {
+        this.teacher.icon = res.data
+      })
+    },
+    uploadFile2: function(param) {
+      const formData = new FormData()
+      formData.append('file', param.file)
+      upload.uploadImage(formData).then(res => {
+        console.log('上传成功', res)
+        this.handleSuccess(res.data)
+      })
     }
   }
 }

@@ -34,21 +34,23 @@ export default {
         name: '',
         image: '',
         content: '',
-        org: '',
-        male: ''
+        org: ''
       }
     }
   },
   methods: {
     onSubmit() {
+      if (this.vip.image === '') {
+        this.$message.warning('请选择照片')
+        return
+      }
       addVip(this.vip).then(res => {
         this.$message.success('创建成功')
         this.vip = {
           name: '',
           image: '',
           content: '',
-          org: '',
-          male: ''
+          org: ''
         }
       })
     },
