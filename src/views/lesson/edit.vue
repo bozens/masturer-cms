@@ -10,6 +10,24 @@
       <el-form-item label="课程年龄">
         <el-input v-model="lesson.grade" />
       </el-form-item>
+      <el-form-item label="课程设置">
+        <el-button size="small" type="primary" @click="selectImg1">点击上传</el-button>
+        <div class="el-upload__tip">只能上传jpg/png文件，且不超过2MB</div>
+        <div class="img-list">
+          <div v-for="(item,index) in lesson.lessonSet" :key="index" class="img-item">
+            <img :src="item" alt="">
+            <el-button type="danger" size="small" @click="removeImage1(index)">删除</el-button>
+          </div>
+        </div>
+        <el-upload
+          class="upload-demo"
+          action="#"
+          :http-request="uploadImage1"
+          style="display: none"
+        >
+          <el-button id="uploadImg1" size="small" type="primary" style="display:none">点击上传</el-button>
+        </el-upload>
+      </el-form-item>
       <el-form-item label="课程图片">
         <el-button size="small" type="primary" @click="selectImg">点击上传</el-button>
         <div class="el-upload__tip">只能上传jpg/png文件，且不超过2MB</div>
@@ -154,6 +172,13 @@ export default {
       }
       document.getElementById('uploadImg').click()
     },
+    selectImg1() {
+      if (this.lesson.lessonSet.length > 15) {
+        this.$message.warning('最多只能添加十五张')
+        return
+      }
+      document.getElementById('uploadImg1').click()
+    },
     // 上传成功回调
     handleVideoSuccess(res) {
       this.isShowUploadVideo = true
@@ -176,11 +201,8 @@ export default {
       }
     },
     uploadVideo: function(param) { // 上传的函数
-      console.log('上传视频')
-      console.log(param)
       const formData = new FormData()
       formData.append('file', param.file)
-      console.log(formData)
       upload.uploadVideo(formData).then(res => {
         this.handleVideoSuccess(res)
       })
@@ -189,15 +211,23 @@ export default {
       this.lesson.images.splice(index, 1)
       console.log(this.lesson)
     },
+    removeImage1(index) {
+      this.lesson.lessonSet.splice(index, 1)
+    },
     uploadImage: function(param) { // 上传的函数
-      console.log('上传视频')
-      console.log(param)
       const formData = new FormData()
       formData.append('file', param.file)
-      console.log(formData)
       upload.uploadVideo(formData).then(res => {
         this.lesson.images.push(res.data)
-        console.log(this.fileList)
+        this.$message.success('上传成功')
+      })
+    },
+    uploadImage1: function(param) { // 上传的函数
+      const formData = new FormData()
+      formData.append('file', param.file)
+      upload.uploadVideo(formData).then(res => {
+        this.lesson.lessonSet.push(res.data)
+        this.$message.success('上传成功')
       })
     }
   }
