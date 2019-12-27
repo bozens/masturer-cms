@@ -47,25 +47,16 @@
 </template>
 
 <script>
-import { validUsername } from '@/utils/validate'
-
 export default {
   name: 'Login',
   data() {
-    const validateUsername = (rule, value, callback) => {
-      if (!validUsername(value)) {
-        callback(new Error('Please enter the correct user name'))
-      } else {
-        callback()
-      }
-    }
     return {
       loginForm: {
-        username: 'test',
-        passwd: 'test123'
+        username: '',
+        passwd: ''
       },
       loginRules: {
-        username: [{ required: true, trigger: 'blur', validator: validateUsername }]
+        username: [{ required: true, trigger: 'blur' }]
       },
       loading: false,
       passwordType: 'password',
