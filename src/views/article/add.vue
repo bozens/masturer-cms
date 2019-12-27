@@ -23,6 +23,9 @@
           :options="editorOption"
         />
       </el-form-item>
+      <el-form-item label="文章简介">
+        <el-input v-model="activity.content" type="textarea" />
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="handleSubmit">立即创建</el-button>
         <el-button>取消</el-button>

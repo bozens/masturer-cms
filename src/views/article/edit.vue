@@ -30,13 +30,16 @@
           <i v-else class="el-icon-plus avatar-uploader-icon" />
         </el-upload>
       </el-form-item>
-      <el-form-item label="活动内容">
+      <el-form-item label="文章内容">
         <quill-editor
           ref="QuillEditor"
           v-model="content"
           class="ql-editor"
           :options="editorOption"
         />
+      </el-form-item>
+      <el-form-item label="文章简介">
+        <el-input v-model="activity.content" type="textarea" />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="handleSubmit">修改</el-button>
