@@ -201,7 +201,7 @@ export default {
     uploadImage: function(param) { // 上传的函数
       const formData = new FormData()
       formData.append('file', param.file)
-      upload.uploadVideo(formData).then(res => {
+      upload.uploadImage(formData).then(res => {
         this.lesson.images.push(res.data)
         this.$message.success('上传成功')
       })
@@ -209,7 +209,7 @@ export default {
     uploadImage1: function(param) { // 上传的函数
       const formData = new FormData()
       formData.append('file', param.file)
-      upload.uploadVideo(formData).then(res => {
+      upload.uploadImage(formData).then(res => {
         this.lesson.lessonSet.push(res.data)
         console.log('上传到lessonSet')
         this.$message.success('上传成功')
