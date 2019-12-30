@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form ref="form" :model="activity" label-width="80px">
+    <el-form ref="form" :model="teacher" label-width="80px">
       <el-form-item label="老师姓名">
         <el-input v-model="teacher.name" />
       </el-form-item>
@@ -81,16 +81,16 @@ export default {
   mounted() {
     const id = this.$route.query.id
     this.id = id
-    this.getteacher()
+    this.getTeacher()
   },
   activated() {
     const id = this.$route.query.id
     this.id = id
-    this.getteacher()
+    this.getTeacher()
   },
   methods: {
-    getteacher() {
-      api.getteacher(this.id).then(res => {
+    getTeacher() {
+      api.getTeacher(this.id).then(res => {
         console.log(res)
         this.teacher = res.data
         this.content = res.data.richText

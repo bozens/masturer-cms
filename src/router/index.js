@@ -55,27 +55,6 @@ export const constantRoutes = [
     }]
   },
   {
-    path: '/course',
-    component: Layout,
-    redirect: '/example/list',
-    name: 'table',
-    meta: { title: '课程设置', icon: 'form' },
-    children: [
-      {
-        path: 'list',
-        name: 'list',
-        component: () => import('@/views/lesson/list'),
-        meta: { title: '课程列表', icon: 'table' }
-      },
-      {
-        path: 'add',
-        name: 'add',
-        component: () => import('@/views/lesson/add'),
-        meta: { title: '添加课程', icon: 'tree' }
-      }
-    ]
-  },
-  {
     path: '/activity',
     component: Layout,
     redirect: '/activity/list',

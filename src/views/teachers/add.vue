@@ -99,6 +99,18 @@ export default {
       this.teacher.richText = this.content
       console.log(this.teacher)
       addTeacher(this.teacher).then(res => {
+        this.teacher = {
+          org: '',
+          name: '',
+          icon: '',
+          content: '',
+          // 暂不需要
+          videos: '',
+          pictures: [],
+          // 富文本
+          images: [],
+          richText: ''
+        }
         this.$message.success('添加成功')
       })
     },

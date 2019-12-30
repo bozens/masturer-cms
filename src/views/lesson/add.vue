@@ -47,6 +47,30 @@
         </el-upload>
       </el-form-item>
       <el-form-item label="课程视频">
+        <el-button size="small" type="primary" @click="selectVideo">点击上传</el-button>
+        <div class="img-list" style="height: 500px">
+          <div
+            v-for="(item,index) in lesson.videos"
+            :key="index"
+            class="video-item"
+          >
+            <video
+              :src="item"
+              class="avatar video-avatar"
+              controls="controls"
+              style="width: 400px;height: 400px"
+            >
+              您的浏览器不支持视频播放
+            </video>
+            <el-progress
+              v-if="videoFlag == true"
+              type="circle"
+              :percentage="videoUploadPercent"
+              style="margin-top:7px;"
+            />
+            <el-button type="danger" size="small" @click="removeVideo(index)">删除</el-button>
+          </div>
+        </div>
         <el-upload
           class="avatar-uploader"
           action="action"
@@ -56,26 +80,8 @@
           :show-file-list="false"
           :http-request="uploadVideo"
         >
+          <el-button id="uploadVideo" size="small" type="primary" style="display:none">点击上传</el-button>
           <div slot="tip" class="el-upload__tip">只能上传mp4文件，且不超过50MB</div>
-          <video
-            v-if="videoForm.showVideoPath !='' && !videoFlag"
-            :src="videoForm.showVideoPath"
-            class="avatar video-avatar"
-            controls="controls"
-            style="width: 400px"
-          >
-            您的浏览器不支持视频播放
-          </video>
-          <i
-            v-else-if="videoForm.showVideoPath =='' && !videoFlag"
-            class="el-icon-plus avatar-uploader-icon"
-          />
-          <el-progress
-            v-if="videoFlag == true"
-            type="circle"
-            :percentage="videoUploadPercent"
-            style="margin-top:7px;"
-          />
         </el-upload>
       </el-form-item>
       <el-form-item label="课程介绍">
@@ -150,18 +156,25 @@ export default {
       this.videoUploadPercent = file.percentage.toFixed(0) * 1
     },
     selectImg() {
-      if (this.lesson.images.length > 5) {
-        this.$message.warning('最多只能添加五张')
+      if (this.lesson.images.length >= 30) {
+        this.$message.warning('最多只能添加30张')
         return
       }
       document.getElementById('uploadImg').click()
     },
     selectImg1() {
-      if (this.lesson.lessonSet.length > 15) {
-        this.$message.warning('最多只能添加十五张')
+      if (this.lesson.lessonSet.length >= 15) {
+        this.$message.warning('最多只能添加15张')
         return
       }
       document.getElementById('uploadImg1').click()
+    },
+    selectVideo() {
+      if (this.lesson.videos.length >= 10) {
+        this.$message.warning('最多只能添加10个')
+        return
+      }
+      document.getElementById('uploadVideo').click()
     },
     // 上传成功回调
     handleVideoSuccess(res) {
@@ -178,7 +191,8 @@ export default {
 
       // 后台上传地址
       if (res) {
-        this.videoForm.showVideoPath = res.data
+        const { lesson } = this
+        lesson.videos.push(res.data)
         this.$message.success('上传成功')
       } else {
         this.$message.error('上传失败')
@@ -190,6 +204,9 @@ export default {
       upload.uploadVideo(formData).then(res => {
         this.handleVideoSuccess(res)
       })
+    },
+    removeVideo(index) {
+      this.lesson.videos.splice(index, 1)
     },
     removeImage(index) {
       this.lesson.images.splice(index, 1)
