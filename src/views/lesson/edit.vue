@@ -137,16 +137,8 @@ export default {
   methods: {
     onSubmit() {
       const { lesson } = this
-      lesson.videos = []
-      lesson.videos.push(this.videoForm.showVideoPath)
       editLesson(lesson).then(res => {
         this.$message.success('修改成功')
-        this.article = {
-          title: '',
-          icon: '',
-          content: '',
-          org: ''
-        }
       })
     },
     getLesson() {

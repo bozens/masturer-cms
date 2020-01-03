@@ -127,13 +127,16 @@ export default {
   methods: {
     onSubmit() {
       const { lesson } = this
-      lesson.videos.push(this.videoForm.showVideoPath)
       addLesson(lesson).then(res => {
         this.$message.success('创建成功')
-        this.article = {
-          title: '',
-          icon: '',
+        this.lesson = {
+          name: '',
+          category: '',
+          grade: '',
           content: '',
+          images: [],
+          lessonSet: [],
+          videos: [],
           org: ''
         }
       })
