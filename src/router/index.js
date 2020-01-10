@@ -179,7 +179,32 @@ export const constantRoutes = [
       }
     ]
   },
-
+  {
+    path: '/honor',
+    component: Layout,
+    redirect: '/honor/list',
+    name: 'honor',
+    meta: { title: '荣誉', icon: 'form' },
+    children: [
+      {
+        path: 'list',
+        name: 'honorList',
+        component: () => import('@/views/honor/list'),
+        meta: { title: '荣誉列表', icon: 'table' }
+      },
+      {
+        path: 'add',
+        name: 'honorAdd',
+        component: () => import('@/views/honor/add'),
+        meta: { title: '添加荣誉', icon: 'tree' }
+      },
+      {
+        path: 'edit',
+        name: 'honorEdit',
+        component: () => import('@/views/honor/edit')
+      }
+    ]
+  },
   {
     path: '/form',
     component: Layout,

@@ -1,8 +1,8 @@
 <template>
   <div class="app-container">
-    <el-form ref="form" :model="activity" label-width="80px">
-      <el-form-item label="文章标题">
-        <el-input v-model="activity.title" />
+    <el-form ref="form" :model="honor" label-width="80px">
+      <el-form-item label="荣誉标题">
+        <el-input v-model="honor.name" />
       </el-form-item>
       <el-form-item label="缩略图">
         <!--        <el-upload-->
@@ -26,11 +26,11 @@
           :show-file-list="false"
           :http-request="uploadFile"
         >
-          <img v-if="activity.icon" :src="activity.icon" class="avatar" style="width: 200px;height: 200px">
+          <img v-if="honor.icon" :src="honor.icon" class="avatar" style="width: 200px;height: 200px">
           <i v-else class="el-icon-plus avatar-uploader-icon" />
         </el-upload>
       </el-form-item>
-      <el-form-item label="文章内容">
+      <el-form-item label="荣誉内容">
         <quill-editor
           ref="QuillEditor"
           v-model="content"
@@ -38,8 +38,8 @@
           :options="editorOption"
         />
       </el-form-item>
-      <el-form-item label="文章简介">
-        <el-input v-model="activity.content" type="textarea" />
+      <el-form-item label="荣誉简介">
+        <el-input v-model="honor.content" type="textarea" />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="handleSubmit">修改</el-button>
@@ -59,7 +59,7 @@
 
 <script>
 import * as upload from '@/api/upload'
-import * as api from '@/api/article'
+import * as api from '@/api/honor'
 import quill from '@/assets/config/quill'
 const toolbarOptions = quill.toolbarOptions
 
@@ -68,7 +68,7 @@ export default {
   data() {
     const _this = this
     return {
-      activity: {
+      honor: {
         org: '',
         title: '',
         icon: '',
@@ -99,18 +99,18 @@ export default {
   mounted() {
     const id = this.$route.query.id
     this.id = id
-    this.getActivity()
+    this.getHonor()
   },
   activated() {
     const id = this.$route.query.id
     this.id = id
-    this.getActivity()
+    this.getHonor()
   },
   methods: {
-    getActivity() {
-      api.getArticle(this.id).then(res => {
+    getHonor() {
+      api.getHonor(this.id).then(res => {
         console.log(res)
-        this.activity = res.data
+        this.honor = res.data
         this.content = res.data.richText
       })
     },
@@ -125,9 +125,9 @@ export default {
         quill.insertEmbed(length, 'image', res)
         // 调整光标到最后
         quill.setSelection(length + 1)
-        const { activity } = this
-        activity.images.push(res)
-        this.activity = activity
+        const { honor } = this
+        honor.images.push(res)
+        this.honor = honor
         this.$message.success('插入图片成功')
       } else {
         // 提示信息，需引入Message
@@ -137,8 +137,7 @@ export default {
     },
     handleSubmit() {
       this.activity.richText = this.content
-      console.log(this.activity)
-      api.editArticle(this.activity).then(res => {
+      api.editHonor(this.honor).then(res => {
         this.$message.success('修改成功')
       })
     },
@@ -153,7 +152,7 @@ export default {
       console.log(formData)
       upload.uploadImage(formData).then(res => {
         this.$message.success('上传成功')
-        this.activity.icon = res.data
+        this.honor.icon = res.data
       })
     },
     uploadFile2: function(param) {
