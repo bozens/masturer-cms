@@ -136,7 +136,7 @@ export default {
       console.log('success', res)
     },
     handleSubmit() {
-      this.activity.richText = this.content
+      this.honor.richText = this.content
       api.editHonor(this.honor).then(res => {
         this.$message.success('修改成功')
       })
